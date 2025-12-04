@@ -14,8 +14,18 @@ Note that if you'd like to submit a substantial change to an existing RFC that i
 {% for page in sortedPages %}
 {% assign ext = page.name | split:'.' | last %}
 {% if ext == 'md' and page.name != 'index.md' %}
+{% assign status = nil %}
+{% if page.content contains '**Status**:' %}
+{% assign status_match = page.content | split: '**Status**:' %}
+{% if status_match.size > 1 %}
+{% assign status_line = status_match[1] | split: '
+' | first %}
+{% assign status = status_line | strip | remove: '**' | strip %}
+{% endif %}
+{% endif %}
 <li>
-<a href="{{ page.url }}">{{ page.title }}</a>
+<a href="{{ page.url }}">{{ page.title }}{% if status %} ({{ status }}){% endif %}</a>
 </li>
 {% endif %}
 {% endfor %}
+</ul>
